@@ -1,0 +1,145 @@
+<html>
+<head>
+	<title>HackingArt</title>
+
+		<meta name="og:title" property="og:title" content="HackingArt">
+	<meta name="author" content="BlackReaper" />
+	<meta name="robots" content="index,follow">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="canonical" href="https://blackreapersk.github.io/" />
+	<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<pre><center><a class='clip' href='./'>  /$$   /$$                     /$$       /$$                      /$$$$$$              /$$    
+| $$  | $$                    | $$      |__/                     /$$__  $$            | $$    
+| $$  | $$  /$$$$$$   /$$$$$$$| $$   /$$ /$$ /$$$$$$$   /$$$$$$ | $$  \ $$  /$$$$$$  /$$$$$$  
+| $$$$$$$$ |____  $$ /$$_____/| $$  /$$/| $$| $$__  $$ /$$__  $$| $$$$$$$$ /$$__  $$|_  $$_/  
+| $$__  $$  /$$$$$$$| $$      | $$$$$$/ | $$| $$  \ $$| $$  \ $$| $$__  $$| $$  \__/  | $$    
+| $$  | $$ /$$__  $$| $$      | $$_  $$ | $$| $$  | $$| $$  | $$| $$  | $$| $$        | $$ /$$
+| $$  | $$|  $$$$$$$|  $$$$$$$| $$ \  $$| $$| $$  | $$|  $$$$$$$| $$  | $$| $$        |  $$$$/
+|__/  |__/ \_______/ \_______/|__/  \__/|__/|__/  |__/ \____  $$|__/  |__/|__/         \___/  
+                                                       /$$  \ $$                              
+                                                      |  $$$$$$/                              
+                                                       \______/                               
+<div class='menu'><font style='color:#81ff52'><b><a href="../artigos">Artigos</a>   <a href="../sobremim.html">Sobre Mim</a>   <a target='_blank' href="https://www.youtube.com/channel/UCnjGTP1yeUo0pLkiO3oxDng">Youtube</a></b></font>      |       <a href='https://github.com/BlackReaperSK' class='eu' target='_blank'>Felipe Sousa</a></div></a></center>
+</pre>
+<div class='mainContainer'>
+
+	<h1 class='title'>Ngrok e PortForwarding, o que é?</h1><a class='date'>16/07/2021</a><hr style='clear:both;border:none'/><br><center><img alt='Header' src='https://curity.io/images/resources/tutorials/deploy/tutorials-ngrok.png' class='img-post'/></a>
+<br>
+<br>	
+<br>No artigo anterior, falei sobre Reverse Shells e seu funcionamento. Neste artigo, irei falar sobre PortForwarding e explicar a utilização do Ngrok para fazer este processo, e como ele pode ser útil.
+<br>
+<br><h1>PortForwarding | "Levar portas para frente"
+</h1>
+<br>Exatamente como escrito acima, o PortForwarding nada mais é do que você levar as "Portas a frente", como o proprio nome já diz. Pense nisto como levar as coisas a diante, levar para frente. Como exemplo, tenho um computador de IP 192.168.0.5 (rede local), com a porta 80 rodando um serviço http, e quero levar esse serviço a outra faixa de IP, já que não estamos na mesma rede. Bom, para isso ocorrer, você precisará fazer PortForwarding, fazendo com que porta 80 da sua maquina (localhost) vá para frente, como no desenho a baixo.
+<br>
+<br>
+<img alt='Header' src='https://wiki.teltonika-networks.com/wikibase/images/thumb/6/61/Networking_rutos_faq_port_forwarding_example_1_v1.png/900px-Networking_rutos_faq_port_forwarding_example_1_v1.png' class='img-post'/>
+<br>
+<br>
+<br>
+<br>
+<br>Acima, vemos um caso de PortForwarding. O cliente, está requerindo o serviço http na porta 80 por meio da internet, onde:
+<br>
+<br>localhost:80 = 192.168.1.100:80
+<br>rede interna = 192.168.1.0/24 (192.168.1.0 - .255)
+<br>192.168.0.100:80 = 10.0.0.1:8080
+<br>
+<br>Cliente requisita o endereço de IP 10.0.0.1, porta 8080
+<br>Essa requisição chega a rede local, que então verifica e manda para seu endereço correspondente (No caso, 192.168.1.100:80).
+<br>
+<br>Primeiro vemos que o localhost passa a ter o endereçamento de IP 192.168.1.100, sendo assim, o a porta 80 do localhost passa a ser também distribuida pela rede interna. Em seguida, vemos a extensão da rede interna que é 192.180.1.0/24. Então, o que acontece neste caso é que a propria rede está fazendo as portas irem a diante, fazendo assim, chegar na internet, com a faixa de IP 10.0.0.0 mas com uma porta diferente, sendo agora, o IP 192.168.1.100 está sendo representado lógicamente pelo IP 10.0.0.1, e a porta 80, equivale a porta 8080 para internet. Em si, sem o PortForwarding não existiria a internet, pois todos os serviços não passariam da rede interna/localhost.
+<br>
+<br>
+<br>
+<img alt='Header' src='https://cdn-cjhdc.nitrocdn.com/tPLIHHYmvgXTMNcfIBzTutGBpYBvcKzK/assets/static/optimized/networkustad.com/wp-content/uploads/2019/10/05194250416a6a6901fb65645d69f8de.Port-Forwarding.png' class='img-post'/>
+<br>
+<br>
+<br>
+<h1>Ngrok, PortForwarding, Tunelamento e como ele é util. </h1>
+<br>
+<br>Bom, fazendo um breve resumo sobre o ngrok, ele faz em partes, o processo de PortForwarding explicado a cima. Ele cria um tunel, que faz o Forwarding de uma porta que você escolher de seu localhost. Como por exemplo, estou rodando um servidor web na minha maquina e gostaria de mostrar para meus amigos. Posso me utilizar do ngrok para isso, apenas utilizando o comando: ngrok tcp 80 e ele me dará o Forwarding do tunelamento. Sendo assim, é só eu mandar o endereço para os meus amigos, e eles estão vendo o que está rodando no meu localhost:80 !
+<br>
+<br>
+<h2>Instalando e configurando Ngrok</h2>
+<br>Você poderá instalar o ngrok em diversas plataformas, como Windows, Mac, Linux, etc. Como considero que a maioria dos leitores é úsuario de Linux, irei ensinar no linux.
+<br>
+<br>Você pode instalar utilizando-se do snap: snap install ngrok
+<br>Ou você poderá baixar diretamente do site: https://ngrok.com/download
+<br>
+<br>Após baixar, recomendo que leia o --help, lendo, você pode ver, que irá precisar de um Token de Autenticação, o mesmo ser adquirido no site logando com a sua conta (ou criando uma nova conta), e indo na sessão "Your Auth Token", após isto, você copiará o seu Auth Token e inserir no terminal com o seguinte comando:
+<br>
+<br> ngrok authtoken seu_token
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>black@arcolinux</a>:<a class='ps3'>~</a><a class='ps2'>$ ngrok authtoken TokenMuitoFodaEManeiro                
+</a><br>
+<br>
+<br>WARNING: cgroup v2 is not fully supported yet, proceeding with partial confinement
+Authtoken saved to configuration file: /home/black/.ngrok2/ngrok.yml
+<br></div></div>
+<br>
+<br>Pronto! Seu Ngrok está pronto para o uso!
+<br>
+<br>
+<h2>Utilizando o Ngrok</h2> 
+<br>
+<br>Agora, depois do ngrok instalado e configurado, você apenas precisa escolher uma porta (ou saber em qual porta o serviço que você quer deixar a mostra está rodando), e iniciar o ngrok. Eu por exemplo, iniciei um http server na porta 8000 por meio do módulo http do python.
+<br>
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>black@arcolinux</a>:<a class='ps3'>~</a><a class='ps2'>$ python3 -m http.server                
+</a><br>
+<br>Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ..
+<br>
+<br></div></div>
+<br> 
+<br>Agora, vamos iniciar o ngrok para passar essa porta a frente, como o serviço está rodando na porta 8000, então iniciaremos o ngrok assim:
+<br>
+<br>
+<div class='terminal'><div class='terminal-top'><br>
+<span class='terminal-icon'>>_</span><span class='terminal-title'></span><span class='dot' style='background-color:#e8534b;'></span><span class='dot' style='background-color:#5ac434;'></span><span class='dot' style='background-color:#f1ab1c;'></span><br></div><div class='terminal-content'>
+<br><a class='ps1'>black@arcolinux</a>:<a class='ps3'>~</a><a class='ps2'>$ ngrok tcp 8000
+<br></div></div>
+<br>
+<br>Em seguida, o ngrok nos redireciona para o painel, no terminal. 
+<br>
+<br>
+<img alt='Header' src='https://cdn.discordapp.com/attachments/788148691999522817/865611171539976232/unknown.png' class='img-post'/>
+<br>
+<br>
+<br>Aqui vemos, que o localhost:8000 agora tem um novo endereço, passa a ser 8.tcp.ngrok.io:11993. Se entrarmos neste endereço que o ngrok nos dá, é possivel vermos que está com o tudo o que está rodando no localhost:8000 (ou a porta que você escolher), como nas imagens abaixo.
+<br>
+<br>
+<img alt='Header' src='https://cdn.discordapp.com/attachments/788148691999522817/865612284587933696/unknown.png' class='img-post'/>
+<br>
+<br>
+<br>
+<img alt='Header' src='https://cdn.discordapp.com/attachments/788148691999522817/865612506730332210/unknown.png' class='img-post'/>
+<br>
+<br>
+<br>
+<br><h2>Ngrok para reverse shells e outros</h2>
+<br>
+<br>Bom, agora que você sabe como instalar, configurar, e entende o básico de como funciona, você já deve imaginar o por que ele é muito útil, tanto para úsuarios normais, quanto para estudantes de segurança da informação. Como explicado no artigo anterior, a reverse shell exige que você tenha uma porta escutando para a outra maquina conectar-se nela. Sabendo disto, você pode utilizar do tunelamento do ngrok para fazer tal coisa, assim não precisando abrir as portas de sua rede, etc.
+<br>
+<br>Como fazer? Simples! 
+<br>Como você viu na imagem a cima, seu endereço passa a ser um dado do ngrok, então, [exemplo] localhost == 0.tcp.ngrok.io, porta 80 do localhost == 23874
+<br>Com isto, basta utilizar de um comando de reverse e você receberá a conexão como se estivesse localmente!
+<br>
+<br>
+<br>
+<img alt='Header' src='https://s2.glbimg.com/fP0UcztEtzUGXiUYJv-103-NurU=/512x320/smart/e.glbimg.com/og/ed/f/original/2021/02/01/matrix.jpg' class='img-post'/>
+<br>
+<br>
+<br></div></div>
+</div>
+<div class='footer'>
+Este texto foi escrito por mim, BlackReaper, baseado no que eu sei, e no que eu li. </a>
+</div>
+</body>
